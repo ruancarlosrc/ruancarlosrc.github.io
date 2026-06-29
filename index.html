@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ruan Carlos — Blue Team & SOC Analyst Jr.</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #080c10;
+      --surface:   #0d1117;
+      --border:    #1e2a38;
+      --accent:    #00d4ff;
+      --accent2:   #0077aa;
+      --text:      #cdd9e5;
+      --muted:     #546e7a;
+      --danger:    #ff4757;
+      --mono:      'Share Tech Mono', monospace;
+      --sans:      'Inter', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* SCANLINE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,212,255,0.015) 2px,
+        rgba(0,212,255,0.015) 4px
+      );
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(8,12,16,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 52px;
+    }
+
+    .nav-logo {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--accent);
+      letter-spacing: 0.05em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.8rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--accent); text-decoration: none; }
+
+    /* HERO */
+    .hero {
+      min-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 4rem 2rem;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .hero-tag {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .hero-tag::before {
+      content: '';
+      display: inline-block;
+      width: 28px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .hero h1 {
+      font-family: var(--mono);
+      font-size: clamp(2rem, 6vw, 3.8rem);
+      font-weight: 400;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 0.4rem;
+    }
+
+    .hero h1 span {
+      color: var(--accent);
+    }
+
+    .hero-role {
+      font-family: var(--mono);
+      font-size: clamp(0.9rem, 2vw, 1.1rem);
+      color: var(--muted);
+      margin-bottom: 1.8rem;
+      letter-spacing: 0.05em;
+    }
+
+    .hero-desc {
+      max-width: 560px;
+      color: var(--text);
+      font-size: 0.95rem;
+      margin-bottom: 2.4rem;
+      line-height: 1.8;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.65rem 1.4rem;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      background: transparent;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+      display: inline-block;
+    }
+
+    .btn:hover {
+      background: var(--accent);
+      color: var(--bg);
+      text-decoration: none;
+    }
+
+    .btn-ghost {
+      border-color: var(--border);
+      color: var(--muted);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--muted);
+      color: var(--text);
+      background: transparent;
+    }
+
+    /* TERMINAL BLINK */
+    .blink {
+      display: inline-block;
+      width: 10px;
+      height: 1.1em;
+      background: var(--accent);
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* SECTIONS */
+    section {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 2rem;
+    }
+
+    /* SKILLS GRID */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .skill-item {
+      background: var(--surface);
+      padding: 1rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .skill-name {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--accent);
+    }
+
+    .skill-cat {
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* LABS */
+    .labs-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .lab-item {
+      background: var(--surface);
+      padding: 1.2rem 1.4rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: start;
+      gap: 1rem;
+      transition: background 0.15s;
+    }
+
+    .lab-item:hover { background: #111820; }
+
+    .lab-title {
+      font-family: var(--mono);
+      font-size: 0.88rem;
+      color: #fff;
+      margin-bottom: 0.25rem;
+    }
+
+    .lab-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .lab-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+
+    .tag {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      padding: 0.15rem 0.5rem;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .tag-accent {
+      border-color: var(--accent2);
+      color: var(--accent);
+    }
+
+    .lab-link {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      white-space: nowrap;
+      padding: 0.3rem 0.6rem;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+
+    .lab-link:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* CERTS */
+    .cert-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.2rem 1.4rem;
+      margin-bottom: 1px;
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .cert-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .cert-dot.pending { background: var(--muted); }
+
+    .cert-name {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: #fff;
+    }
+
+    .cert-meta {
+      font-size: 0.76rem;
+      color: var(--muted);
+      margin-top: 0.15rem;
+    }
+
+    .cert-status {
+      margin-left: auto;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      padding: 0.2rem 0.6rem;
+      border: 1px solid var(--accent2);
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .cert-status.pending {
+      border-color: var(--border);
+      color: var(--muted);
+    }
+
+    /* CONTACT */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .contact-item {
+      background: var(--surface);
+      padding: 1.2rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      transition: background 0.15s;
+    }
+
+    .contact-item:hover { background: #111820; }
+
+    .contact-label {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .contact-value {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      color: var(--accent);
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      text-align: center;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    /* STATUS BAR */
+    .status-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--accent);
+      color: var(--bg);
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      padding: 0.25rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      z-index: 100;
+      letter-spacing: 0.05em;
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 1rem; }
+      .nav-links { gap: 1rem; }
+      .hero { padding: 3rem 1rem; }
+      section { padding: 3rem 1rem; }
+      .lab-item { grid-template-columns: 1fr; }
+      .lab-link { display: none; }
+      .status-bar { display: none; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .blink { animation: none; opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <span class="nav-logo">rc@blueteam:~$</span>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-tag">Blue Team · Defesa · Detecção</div>
+    <h1>Ruan <span>Carlos</span><span class="blink"></span></h1>
+    <p class="hero-role">// SOC Analyst Jr. · Blue Team · Remoto</p>
+    <p class="hero-desc">
+      Tecnólogo em Cibersegurança (UniCesumar, 2026) focado em detecção de ameaças,
+      análise de logs e resposta a incidentes. Construindo portfólio hands-on com
+      Active Directory, Splunk, Wazuh, pfSense/Suricata e simulações reais de ataque e defesa.
+    </p>
+    <div class="hero-actions">
+      <a class="btn" href="https://github.com/ruancarlosrc" target="_blank" rel="noopener">GitHub →</a>
+      <a class="btn btn-ghost" href="https://linkedin.com/in/ruan-carlos-4a9803379/" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </div>
+
+  <!-- LABS -->
+  <section id="labs">
+    <div class="section-label">// portfolio</div>
+    <h2 class="section-title">Labs Concluídos</h2>
+    <div class="labs-list">
+
+      <div class="lab-item">
+        <div>
+          <div class="lab-title">Active Directory Lab 1 — Ambiente Corporativo Simulado</div>
+          <div class="lab-desc">Domínio com 4 níveis hierárquicos, OUs, GPOs, usuários e grupos. Base no Josh Madakor + extensões próprias.</div>
+          <div class="lab-tags">
+            <span class="tag tag-accent">MITRE T1078</span>
+            <span class="tag">Windows Server</span>
+            <span class="tag">AD DS</span>
+            <span class="tag">GPO</span>
+          </div>
+        </div>
+        <a class="lab-link" href="https://github.com/ruancarlosrc/active-directory-lab" target="_blank">GitHub ↗</a>
+      </div>
+
+      <div class="lab-item">
+        <div>
+          <div class="lab-title">Active Directory Lab 2 — Base</div>
+          <div class="lab-desc">Implementação base do ambiente Active Directory seguindo metodologia Josh Madakor, com foco em estrutura e fundamentos.</div>
+          <div class="lab-tags">
+            <span class="tag tag-accent">MITRE T1078</span>
+            <span class="tag">Windows Server</span>
+            <span class="tag">AD DS</span>
+          </div>
+        </div>
+        <a class="lab-link" href="https://github.com/ruancarlosrc/active-directory-lab-base" target="_blank">GitHub ↗</a>
+      </div>
+
+      <div class="lab-item">
+        <div>
+          <div class="lab-title">Splunk SIEM Lab 1 — Detecção & Dashboards</div>
+          <div class="lab-desc">Ingestão de logs, criação de dashboards e detecção de PowerShell ofuscado.</div>
+          <div class="lab-tags">
+            <span class="tag tag-accent">MITRE T1059</span>
+            <span class="tag">Splunk</span>
+            <span class="tag">SPL</span>
+          </div>
+        </div>
+        <a class="lab-link" href="https://github.com/ruancarlosrc/splunk-SIEM-lab" target="_blank">GitHub ↗</a>
+      </div>
+
+      <div class="lab-item">
+        <div>
+          <div class="lab-title">Splunk SIEM Lab 2 — LOLBin Hunting & Automação</div>
+          <div class="lab-desc">Hunting avançado de LOLBins, detecção de living-off-the-land e webhook automation.</div>
+          <div class="lab-tags">
+            <span class="tag tag-accent">MITRE T1218</span>
+            <span class="tag">Splunk</span>
+            <span class="tag">LOLBin</span>
+            <span class="tag">Webhook</span>
+          </div>
+        </div>
+        <a class="lab-link" href="https://github.com/ruancarlosrc/Lab-SIEM-Splunk-2" target="_blank">GitHub ↗</a>
+      </div>
+
+      <div class="lab-item">
+        <div>
+          <div class="lab-title">pfSense + Suricata — Firewall & IDS/IPS</div>
+          <div class="lab-desc">Firewall perimetral com regras customizadas, IDS Suricata e simulação de DoS para validação de alertas.</div>
+          <div class="lab-tags">
+            <span class="tag tag-accent">MITRE T1499</span>
+            <span class="tag">pfSense</span>
+            <span class="tag">Suricata</span>
+            <span class="tag">IDS/IPS</span>
+          </div>
+        </div>
+        <a class="lab-link" href="https://github.com/ruancarlosrc/PFSense-Firewall-Lab-2" target="_blank">GitHub ↗</a>
+      </div>
+
+      <div class="lab-item">
+        <div>
+          <div class="lab-title">Target Protocols — SMB, RDP, LDAP, Kerberos, WinRM</div>
+          <div class="lab-desc">Ciclo completo ataque + detecção: Kerberoasting, Pass-the-Hash, enumeração LDAP e monitoramento de WinRM.</div>
+          <div class="lab-tags">
+            <span class="tag tag-accent">MITRE T1558.003</span>
+            <span class="tag">Kerberoasting</span>
+            <span class="tag">SMB</span>
+            <span class="tag">Blue Team</span>
+          </div>
+        </div>
+        <a class="lab-link" href="https://github.com/ruancarlosrc/Lab-Protocolos-Alvo-SMB-RDP-LDAP-Kerberos-e-WinRM" target="_blank">GitHub ↗</a>
+      </div>
+
+      <div class="lab-item">
+        <div>
+          <div class="lab-title">Linux IOC Discovery</div>
+          <div class="lab-desc">Investigação em Linux Mint VM com IOCs reais: netcat na porta 4444, SUID rootbash e cron job malicioso.</div>
+          <div class="lab-tags">
+            <span class="tag tag-accent">MITRE T1053</span>
+            <span class="tag">Linux Forensics</span>
+            <span class="tag">IOC</span>
+            <span class="tag">Threat Hunting</span>
+          </div>
+        </div>
+        <a class="lab-link" href="https://github.com/ruancarlosrc/pratica-de-comandos-linux" target="_blank">GitHub ↗</a>
+      </div>
+
+      <div class="lab-item">
+        <div>
+          <div class="lab-title">Wireshark — Análise de Tráfego & OSINT</div>
+          <div class="lab-desc">Captura e análise de protocolos. Bonus: lab de de-anonimização via metadados de tráfego Telegram.</div>
+          <div class="lab-tags">
+            <span class="tag">Wireshark</span>
+            <span class="tag">PCAP</span>
+            <span class="tag">Network Forensics</span>
+          </div>
+        </div>
+        <a class="lab-link" href="https://github.com/ruancarlosrc/wireshark-traffic-analysis-lab" target="_blank">GitHub ↗</a>
+      </div>
+
+      <div class="lab-item">
+        <div>
+          <div class="lab-title">SSH Hardening — Ubuntu Server + Kali</div>
+          <div class="lab-desc">Cinco fases: hardening de configuração, autenticação por chave, fail2ban, auditoria e teste de penetração.</div>
+          <div class="lab-tags">
+            <span class="tag tag-accent">MITRE T1110</span>
+            <span class="tag">SSH</span>
+            <span class="tag">Hardening</span>
+            <span class="tag">Ubuntu</span>
+          </div>
+        </div>
+        <a class="lab-link" href="https://github.com/ruancarlosrc/ssh-hardening-lab" target="_blank">GitHub ↗</a>
+      </div>
+
+      <div class="lab-item">
+        <div>
+          <div class="lab-title">Nessus Essentials — Vulnerability Assessment</div>
+          <div class="lab-desc">Scanner de vulnerabilidades com análise de resultados, priorização por CVSS e relatório de remediação.</div>
+          <div class="lab-tags">
+            <span class="tag">Nessus</span>
+            <span class="tag">CVSS</span>
+            <span class="tag">Vuln Management</span>
+          </div>
+        </div>
+        <a class="lab-link" href="https://github.com/ruancarlosrc/-Vulnerability-Scanning-com-Nessus" target="_blank">GitHub ↗</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="section-label">// stack</div>
+    <h2 class="section-title">Ferramentas & Tecnologias</h2>
+    <div class="skills-grid">
+      <div class="skill-item"><span class="skill-name">Splunk</span><span class="skill-cat">SIEM</span></div>
+      <div class="skill-item"><span class="skill-name">Wazuh</span><span class="skill-cat">SIEM / EDR</span></div>
+      <div class="skill-item"><span class="skill-name">Suricata</span><span class="skill-cat">IDS/IPS</span></div>
+      <div class="skill-item"><span class="skill-name">pfSense</span><span class="skill-cat">Firewall</span></div>
+      <div class="skill-item"><span class="skill-name">Wireshark</span><span class="skill-cat">Network Analysis</span></div>
+      <div class="skill-item"><span class="skill-name">Nessus</span><span class="skill-cat">Vuln Scanner</span></div>
+      <div class="skill-item"><span class="skill-name">Active Directory</span><span class="skill-cat">IAM</span></div>
+      <div class="skill-item"><span class="skill-name">Kali Linux</span><span class="skill-cat">Red Team Tools</span></div>
+      <div class="skill-item"><span class="skill-name">PowerShell</span><span class="skill-cat">Automação</span></div>
+      <div class="skill-item"><span class="skill-name">Python</span><span class="skill-cat">Scripting</span></div>
+      <div class="skill-item"><span class="skill-name">MITRE ATT&CK</span><span class="skill-cat">Framework</span></div>
+      <div class="skill-item"><span class="skill-name">Cyber Kill Chain</span><span class="skill-cat">Framework</span></div>
+    </div>
+  </section>
+
+  <!-- CERTS -->
+  <section id="certs">
+    <div class="section-label">// credenciais</div>
+    <h2 class="section-title">Certificações</h2>
+
+    <div class="cert-item">
+      <div class="cert-dot"></div>
+      <div>
+        <div class="cert-name">Tecnólogo em Cibersegurança</div>
+        <div class="cert-meta">UniCesumar · Junho 2026</div>
+      </div>
+      <span class="cert-status">Concluído</span>
+    </div>
+
+    <div class="cert-item">
+      <div class="cert-dot"></div>
+      <div>
+        <div class="cert-name">Fortinet Certified Fundamentals (FCF)</div>
+        <div class="cert-meta">Fortinet · Válido até Fevereiro 2027</div>
+      </div>
+      <span class="cert-status">Ativo</span>
+    </div>
+
+    <div class="cert-item">
+      <div class="cert-dot pending"></div>
+      <div>
+        <div class="cert-name">Google Cybersecurity Certificate</div>
+        <div class="cert-meta">Coursera · Em andamento</div>
+      </div>
+      <span class="cert-status pending">Em andamento</span>
+    </div>
+
+    <div class="cert-item">
+      <div class="cert-dot pending"></div>
+      <div>
+        <div class="cert-name">CompTIA Security+</div>
+        <div class="cert-meta">Em estudo</div>
+      </div>
+      <span class="cert-status pending">Planejado</span>
+    </div>
+
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-label">// contato</div>
+    <h2 class="section-title">Vamos conversar</h2>
+    <div class="contact-grid">
+      <a class="contact-item" href="https://github.com/ruancarlosrc" target="_blank" rel="noopener">
+        <span class="contact-label">GitHub</span>
+        <span class="contact-value">github.com/ruancarlosrc</span>
+      </a>
+      <a class="contact-item" href="https://linkedin.com/in/ruan-carlos-4a9803379/" target="_blank" rel="noopener">
+        <span class="contact-label">LinkedIn</span>
+        <span class="contact-value">ruan-carlos-4a9803379</span>
+      </a>
+      <div class="contact-item">
+        <span class="contact-label">Localização</span>
+        <span class="contact-value">Bahia, Brasil · Remoto</span>
+      </div>
+      <div class="contact-item">
+        <span class="contact-label">Disponibilidade</span>
+        <span class="contact-value">Aberto a oportunidades</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Ruan Carlos · ruancarlosciber.com.br · 2026</span>
+  </footer>
+
+  <div class="status-bar">
+    <span>SOC Analyst Jr. · Blue Team · Disponível para oportunidades remotas</span>
+    <span id="clock"></span>
+  </div>
+
+  <script>
+    // Clock in status bar
+    function tick() {
+      const now = new Date();
+      document.getElementById('clock').textContent =
+        now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    }
+    tick();
+    setInterval(tick, 1000);
+  </script>
+
+</body>
+</html>
